@@ -42,14 +42,18 @@ pub fn get_url(project_id: &str, data_set: &str) -> String {
 ///
 /// Here we take in the api key as well as data set you'll use, and return the convenience config
 ///
-/// ### Example
+/// ### Example usage:
 /// ```
 /// extern crate sanity;
-/// use sanity::create;
+/// use sanity::helpers::get_json;
 ///
 /// fn main() {
-///      // Returns SanityConfig
-///     let config = create("project_string", "development");
+///   let mut sn = sanity::create(
+///     "proj_id",                // Sanity project ID to use
+///     "data_set",               // Data set to query. i.e. "development"
+///     "Long_string_for_token",  // Bearer token
+///     false,                    // Use prod cdn or not
+///   );
 /// }
 /// ```
 ///
@@ -118,9 +122,10 @@ impl SanityConfig {
     ///
     /// fn main() {
     ///   let mut sn = sanity::create(
-    ///     "proj_id",
-    ///     "data_set",  // i.e. "development"
-    ///     "Long_string_for_token",          // Bearer token
+    ///     "proj_id",                // Sanity project ID to use
+    ///     "data_set",               // Data set to query. i.e. "development"
+    ///     "Long_string_for_token",  // Bearer token
+    ///     false,                    // Use prod cdn or not
     ///   );
     ///   let res = sn.get(&String::from("*[_type == 'recipe']"));
     ///   if res.is_ok() {
