@@ -6,6 +6,7 @@ edition = "2018"
 description = "The open source client for consuming https://sanity.io with Rust, based on reqwest."
 license = "MIT"
 repository = "https://github.com/DukeFerdinand/sanity.rs"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
