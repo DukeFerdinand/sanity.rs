@@ -1,6 +1,6 @@
 [package]
 name = "sanity"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Douglass Hooker <DouglassHooker@gmail.com>"]
 edition = "2018"
 description = "The open source client for consuming https://sanity.io with Rust, based on reqwest."
