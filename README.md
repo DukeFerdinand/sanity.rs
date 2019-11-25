@@ -55,6 +55,7 @@ fn main() {
     "proj_id",                // Sanity project ID to use
     "data_set",               // Data set to query. i.e. "development"
     "Long_string_for_token",  // Bearer token
+    false,                    // Use prod cdn or not
   );
   let res = sn.get(&String::from("*[_type == 'recipe']"));
   if res.is_ok() {
