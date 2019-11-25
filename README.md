@@ -2,7 +2,7 @@
 
 The open source client for consuming https://sanity.io with Rust, based on `reqwest`.
 
-The goal behind this project is to provide a relatively low level wrapper for consuming Sanity-powered APIs. The first goal is to make sure all bases are covered for running bare query strings, then I'd like to add in support for some sort of ORM to run queries against (If you know any easy way to implement this please let me know).
+The goal behind this project is to provide a relatively low level wrapper for consuming Sanity-powered APIs. The first goal is to make sure all bases are covered for running bare [GROQ query strings](https://www.sanity.io/docs/overview-groq), then I'd like to add in support for some sort of ORM to run queries against (If you know any easy way to implement this please let me know).
 
 Stretch goal would be adding a higher level GraphQL consumer to make Sanity operations a breeze, but there are other GraphQL projects for Rust so that's not a high priority :)
 
@@ -53,7 +53,7 @@ fn main() {
   // PLEASE do not use bare strings in your project
   let mut sn = sanity::create(
     "proj_id",                // Sanity project ID to use
-    "data_set",               // i.e. "development"
+    "data_set",               // Data set to query. i.e. "development"
     "Long_string_for_token",  // Bearer token
   );
   let res = sn.get(&String::from("*[_type == 'recipe']"));

@@ -3,6 +3,8 @@ name = "sanity"
 version = "0.1.0"
 authors = ["Douglass Hooker <DouglassHooker@gmail.com>"]
 edition = "2018"
+description = "The open source client for consuming https://sanity.io with Rust, based on reqwest."
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
