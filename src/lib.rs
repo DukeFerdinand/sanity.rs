@@ -7,7 +7,7 @@ extern crate serde_json;
 pub mod helpers;
 
 use reqwest::header::{HeaderMap, HeaderValue};
-use reqwest::Client;
+use reqwest::blocking::Client;
 use serde_json::Value;
 
 #[derive(Debug, Clone)]
@@ -18,6 +18,26 @@ pub struct SanityConfig {
     url: String,
     pub query: Query,
 }
+
+
+impl SanityConfig {
+    pub fn new(project_id: &str, data_set: &str, token: &str, use_prod: bool) -> Self {
+        let base_url = if use_prod {
+            format!("https://{}.apicdn.sanity.io/v1/data/query/{}/", project_id, data_set)
+        } else {
+            format!("https://{}.api.sanity.io/v1/data/query/{}/", project_id, data_set)
+        };
+
+        SanityConfig {
+            project_id: project_id.to_string(),
+            access_token: token.to_string(),
+            data_set: data_set.to_string(),
+            url: get_url(project_id, data_set),
+            query: Query::new(base_url),
+        }
+    }
+}
+
 
 pub fn construct_headers(auth_token: &str) -> HeaderMap {
     let mut headers = HeaderMap::new();
@@ -59,26 +79,7 @@ pub fn get_url(project_id: &str, data_set: &str) -> String {
 ///
 ///
 pub fn create(project_id: &str, data_set: &str, token: &str, use_prod: bool) -> SanityConfig {
-    SanityConfig {
-        project_id: project_id.to_string(),
-        access_token: token.to_string(),
-        data_set: data_set.to_string(),
-        url: get_url(project_id, data_set),
-        query: Query {
-            base_url: if use_prod {
-                format!(
-                    "https://{}.apicdn.sanity.io/v1/data/query/{}/",
-                    project_id, data_set
-                )
-            } else {
-                format!(
-                    "https://{}.api.sanity.io/v1/data/query/{}/",
-                    project_id, data_set
-                )
-            },
-            query: None,
-        },
-    }
+    SanityConfig::new(project_id, data_set, token, use_prod)
 }
 
 #[derive(Debug, Clone)]
@@ -88,10 +89,14 @@ pub struct Query {
 }
 
 impl Query {
+    pub fn new(base_url: String) -> Self {
+        Query { base_url, query: None }
+    }
+
     pub fn execute(&self) -> Result<Value, Box<dyn std::error::Error>> {
         let url = format!("{}?query={}", self.base_url, self.query.as_ref().unwrap());
-        let mut res: _ = reqwest::get(&url)?;
-        let data: Value = serde_json::from_str(&res.text()?)?;
+        let res = reqwest::blocking::get(&url)?;
+        let data: Value = res.json()?;
 
         Ok(data)
     }
@@ -133,7 +138,7 @@ impl SanityConfig {
     ///   }
     /// }
     /// ```
-    pub fn get(&mut self, query: &str) -> Result<reqwest::Response, reqwest::Error> {
+    pub fn get(&mut self, query: &str) -> Result<reqwest::blocking::Response, reqwest::Error> {
         let client = Client::new();
         let url = self.build_url(Some(query));
         let res = client.get(&url).bearer_auth(&self.access_token).send();

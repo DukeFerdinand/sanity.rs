@@ -11,6 +11,6 @@ readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-reqwest = "0.9.22"
+reqwest = { version = "0.10.1", features = ["json", "blocking"] }
 serde = "1.0.102"
 serde_json = "1.0.41"
