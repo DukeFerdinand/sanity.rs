@@ -6,8 +6,8 @@ extern crate serde_json;
 
 pub mod helpers;
 
+use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderValue};
-use reqwest::Client;
 use serde_json::Value;
 
 #[derive(Debug, Clone)]
@@ -90,8 +90,8 @@ pub struct Query {
 impl Query {
     pub fn execute(&self) -> Result<Value, Box<dyn std::error::Error>> {
         let url = format!("{}?query={}", self.base_url, self.query.as_ref().unwrap());
-        let mut res: _ = reqwest::get(&url)?;
-        let data: Value = serde_json::from_str(&res.text()?)?;
+        let mut res: _ = reqwest::blocking::get(&url)?.text()?;
+        let data: Value = serde_json::from_str(&res)?;
 
         Ok(data)
     }
@@ -133,7 +133,7 @@ impl SanityConfig {
     ///   }
     /// }
     /// ```
-    pub fn get(&mut self, query: &str) -> Result<reqwest::Response, reqwest::Error> {
+    pub fn get(&mut self, query: &str) -> Result<reqwest::blocking::Response, reqwest::Error> {
         let client = Client::new();
         let url = self.build_url(Some(query));
         let res = client.get(&url).bearer_auth(&self.access_token).send();
